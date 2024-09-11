@@ -9,6 +9,8 @@ Full stack web application for both barbers and clients to ease the proccess of 
 
 ### .env:
 PORT= 
+<br/>
 DB_HOST= 
+<br/>
 MONGO_URI= 
 
