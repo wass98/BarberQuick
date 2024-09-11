@@ -1,13 +1,12 @@
 # Barbershop
-Full stack web application (mobile friendly) for booking appointments at the barbershop.
-In the system there are 2 type of users, regular users and administrators.
-After registration and logging process users will be able to schedule, change and cancel their appointments on their profile page. 
-Administrators have a control panel where they can manage all scheduled appointments and users in the system.
+Full stack web application (mobile friendly) for both barbers and clients to ease the proccess of bookings
+In the system there are 2 type of users, barber and client.
+After registration and logging process clients will be able to schedule, change and cancel their appointments on their profile page. 
+Barbers have a control panel where they can manage all scheduled appointments and services in the system.
 <br/>
 
-**Live Demo:** https://barber-appointments.netlify.app/
+**Live Demo:** 
 
-<img src="./readme_imge.png"/>
 
 ### Technologies
 * React at the client side
@@ -18,11 +17,11 @@ Administrators have a control panel where they can manage all scheduled appointm
 ### How to install
 Clone the repository:
 ```
-git clone https://github.com/EliNaduyev/Barbershop.git
+git clone https://github.com/EliNaduyev/BarberQuick.git
 ```
 Enter the clonned folder:
 ```
-cd Barbershop
+cd BarberQuick
 ```
 Enter the client folder:
 ```
