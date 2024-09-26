@@ -7,7 +7,13 @@ const newAppointment = new mongoose.Schema({
     userID: {
         type: String
     },
-    name: {
+    bname: {
+        type: String
+    },
+    cname: {
+        type: String
+    },
+    sname: {
         type: String
     },
     date: {
@@ -19,7 +25,10 @@ const newAppointment = new mongoose.Schema({
     time: {
         type: String
     },
-    phone: {
+    bphone: {
+        type: String
+    },
+    cphone: {
         type: String
     },
     service: {
@@ -36,33 +45,41 @@ const newAppointment = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['pending', 'accepted', 'declined', 'expired', 'done'],
-        default: 'pending'
+        enum: ['En attente', 'Accepté', 'Refusé', 'Expiré', 'Terminé'],
+        default: 'En attente'
+    },
+    cDate:{
+        type:Date,
+        default: Date.now
+    },
+    evaluation:{
+        note:Number,
+        feedback:String
     }
 });
 
 const appoint = mongoose.model('appointments', newAppointment);
 
 // Create a function to update expired appointments
-async function updateExpiredAppointments() {
-    const currentTime = new Date();
-    await appoint.updateMany({
-      status: 'pending',
-      $expr: {
-        $lt: [
-          {
-            $dateFromString: {
-              dateString: { $concat: ['$date', ' ', '$time'] },
-              timezone: 'Europe/Paris' // adjusted to GMT+1
-            }
-          },
-          currentTime
-        ]
-      }
-    }, {
-      $set: { status: 'expired' }
-    });
-  }
+// async function updateExpiredAppointments() {
+//     const currentTime = new Date();
+//     await appoint.updateMany({
+//       status: 'pending',
+//       $expr: {
+//         $lt: [
+//           {
+//             $dateFromString: {
+//               dateString: { $concat: ['$date', ' ', '$time'] },
+//               timezone: 'Europe/Paris' // adjusted to GMT+1
+//             }
+//           },
+//           currentTime
+//         ]
+//       }
+//     }, {
+//       $set: { status: 'expired' }
+//     });
+//   }
 
 //   async function updateDoneAppointments() {
 //     const currentTime = new Date().getTime(); // get the current timestamp
@@ -91,7 +108,7 @@ async function updateExpiredAppointments() {
 //   }
 
 // Run the function at a specific interval (e.g., every 1 minute)
-setInterval(updateExpiredAppointments, 1000); // 60000 ms = 1 minute
+// setInterval(updateExpiredAppointments, 1000); // 60000 ms = 1 minute
 // setInterval(updateDoneAppointments, 1000); // 60000 ms = 1 minute
 
 

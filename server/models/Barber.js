@@ -9,13 +9,19 @@ const newBarber = new mongoose.Schema({
     password:{
         type:String
     },
-    name:{
+    fname:{
+        type:String
+    },
+    lname:{
         type:String
     },
     phone:{
         type:String
     },
     state:{
+        type:String
+    },
+    delegation:{
         type:String
     },
     adress:{
@@ -28,7 +34,21 @@ const newBarber = new mongoose.Schema({
         type:String,
         default:'barber'
     },
-    worktime:{
+    sname:{
+        type:String
+    },
+    patente:{
+        type:String
+    },
+    verified:{
+        type:Boolean,
+        default: false
+    },
+    req:{
+        type:Boolean,
+        default: false
+    },
+     worktime:{
         mon:String,
         tue:String,
         wed:String,
@@ -36,6 +56,19 @@ const newBarber = new mongoose.Schema({
         fri:String,
         sat:String,
         sun:String
+    },
+    bio:{
+        type:String
+    },
+    cDate:{
+        type:Date,
+        default: Date.now
+    },
+    profilePicture: { // New field for profile picture
+        type: String
+    },
+    maps:{
+        type: String
     }
     
  })

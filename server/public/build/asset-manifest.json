@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/static/css/main.11a09e11.css",
+    "main.js": "/static/js/main.c3e79ae8.js",
+    "static/media/pic3.jpg": "/static/media/pic3.a183a1ad12d274c8ea35.jpg",
+    "static/media/hero.jpg": "/static/media/hero.5c214abb40cf5070a365.jpg",
+    "static/media/appointment_bg.jpg": "/static/media/appointment_bg.a8be4a78f8a9ed8b645c.jpg",
+    "static/media/hair_cut.jpg": "/static/media/hair_cut.718804917b44fe1e3e89.jpg",
+    "static/media/beard_shave.jpg": "/static/media/beard_shave.5ff57794b4c9f3a09101.jpg",
+    "static/media/reg_img.jpg": "/static/media/reg_img.7761e17abb75718b5699.jpg",
+    "static/media/hours_img.jpg": "/static/media/hours_img.e3279cf29c7d35126b4e.jpg",
+    "static/media/loading_icon.gif": "/static/media/loading_icon.1910cdb754f86d563089.gif",
+    "static/media/logo.png": "/static/media/logo.bb2415764c765a52ccc7.png",
+    "index.html": "/index.html",
+    "main.11a09e11.css.map": "/static/css/main.11a09e11.css.map",
+    "main.c3e79ae8.js.map": "/static/js/main.c3e79ae8.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.11a09e11.css",
+    "static/js/main.c3e79ae8.js"
+  ]
+}
