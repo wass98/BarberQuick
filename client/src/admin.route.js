@@ -14,7 +14,7 @@ export const AdminRoute = ({component: Components, ...rest}) => {
             } else {
                 console.log('not admin')
               return (
-                <Redirect from={`${props.location}`} to='/appointment'/>
+                <Redirect from={`${props.location}`} to='/'/>
               );
             }
         }}

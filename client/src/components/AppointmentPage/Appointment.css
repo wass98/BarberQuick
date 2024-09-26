@@ -1,5 +1,4 @@
-
-.appointment-container{
+.appointment-container {
     padding-top: 60px;
     height: 100vh;
     background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4)), url("../../assets/appointment_bg.jpg");
@@ -12,129 +11,182 @@
     color: rgb(0, 0, 0);
 }
 
-.appointment-form{
+.appointment-form {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.4);
     background-color: rgb(255, 255, 255);
     z-index: 99;
-    padding:30px;
+    padding: 30px;
     border-radius: 10px;
+    width: 100%;
+    max-width: 500px; /* Set a max width for the form */
 }
 
-.date-picker{
-    padding:7px 5px;
+.appointment-inner-container {
+    margin-bottom: 20px;
+}
+
+.appointment-details {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+}
+
+.appointment-detail {
+    display: flex;
+    justify-content: space-between; /* Space between label and value */
+    margin: 5px 0; /* Spacing between lines */
+}
+
+.appointment-detail span {
+    font-weight: bold;
+}
+
+.date-picker {
+    padding: 7px 5px;
     width: 100%;
     color: rgb(104, 102, 102);
 }
 
-.time-picker{
+.time-picker {
     width: 100%;
     border: 1px solid rgb(90, 90, 90);
     border-radius: 5px;
 }
 
-.appointment-inner-container{
-    margin-bottom: 20px;
-    /* border: 1px solid black; */
-}
-
-.appointment-inner-container p{
-    margin-bottom: 5px;
-   
-}
-
-.phone-input{
-    padding:15px 5px;
+.phone-input {
+    padding: 15px 5px;
     height: 30px;
     width: 100%;
-
 }
 
-.appointment-form h2{
+.appointment-form h2 {
     margin-bottom: 15px;
     color: rgb(68, 68, 68);
 }
 
-.appointment-form h1{
+.appointment-form h1 {
     color: rgb(68, 68, 68);
-
     margin-bottom: 15px;
 }
 
-.appointment-btn{
+.appointment-btn,
+.appointment-btn-next {
     height: 40px;
     width: 100%;
-    padding:5px;
-    margin: 10px 0px;
+    padding: 5px;
+    margin: 10px 0;
     border: none;
     border-radius: 15px;
-    background-color: rgb(68, 68, 68);
-    color: white;
     transition: ease-in-out all 0.3s;
 }
 
-.appointment-btn:hover{
+.appointment-btn {
+    background-color: rgb(68, 68, 68);
+    color: white;
+}
+
+.appointment-btn:hover {
     cursor: pointer;
     background-color: rgb(90, 90, 90);
 }
 
-.appointment-btn-next{
-    height: 40px;
-    width: 100%;
-    padding:5px;
-    margin: 10px 0px;
-    border: none;
-    border-radius: 15px;
+.appointment-btn-next {
     background-color: rgb(98, 156, 196);
     color: white;
-    transition: ease-in-out all 0.3s;
 }
 
-.appointment-btn-next:hover{
+.appointment-btn-next:hover {
     cursor: pointer;
     background-color: rgb(141, 177, 201);
 }
 
-.appointment-data{
-    /* border: 1px solid black; */
+.appointment-data {
     margin: 15px 0px;
     background-color: rgb(69, 159, 233);
     color: white;
     width: 100%;
     padding: 10px;
     border-radius: 10px;
-
     transition: 0.5s all ease-in-out;
     opacity: 0;
     transform: translateY(30px);
-    
 }
 
-.appointment-data-show{
+.appointment-data-show {
     opacity: 1;
     transform: translateY(0px);
-    
 }
 
-.appointment-data h3{
+.appointment-data h3 {
     margin-bottom: 10px;
     color: black;
-
 }
 
-.appointment-data p{
+.appointment-data p {
     margin-bottom: 6px;
     font-weight: bold;
     color: black;
-
 }
 
-.appointment-data span{
-   
+.appointment-data span {
     color: white;
-
 }
 
-.red-astrix{
+.red-astrix {
     color: rgb(219, 15, 15);
 }
+.time-picker-buttons {
+    display: flex;
+    flex-wrap: wrap; /* Allow buttons to wrap if there are too many */
+    justify-content: space-between; /* Space between buttons */
+    margin-top: 10px; /* Add some space above the buttons */
+}
 
+.time-button {
+    flex: 1 1 30%; /* Allow buttons to grow and take up space */
+    margin: 5px; /* Space between buttons */
+    padding: 10px; /* Padding for button */
+    background-color: rgb(240, 240, 240); /* Light background color */
+    border: 1px solid rgb(90, 90, 90);
+    border-radius: 5px; /* Rounded corners */
+    color: rgb(68, 68, 68); /* Text color */
+    cursor: pointer; /* Cursor pointer on hover */
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
+}
+
+.time-button.selected {
+    background-color: rgb(98, 156, 196); /* Background for selected state */
+    color: white; /* Change text color for selected state */
+    border: 1px solid rgb(68, 68, 68); /* Border for selected state */
+    transform: scale(1.05); /* Slightly scale up the selected button */
+}
+
+.time-button:hover {
+    background-color: rgb(200, 200, 200); /* Hover effect for non-selected buttons */
+}
+.service__button:disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+    background-color: #ddd; /* Adjust the background color for disabled buttons */
+    color: #999; /* Adjust the text color for disabled buttons */
+  }
+  
+  /* Remove hover effects on disabled buttons */
+  .service__button:disabled:hover {
+    background-color: #ddd; /* Keep it the same as the disabled state */
+    color: #999; /* Keep it the same as the disabled state */
+  }
+  
+  
+  
+  .time-button:disabled {
+    cursor: default; /* Show a not-allowed cursor */
+    background-color: #aeaeae; /* Set a grey background for disabled state */
+    color: #111111; /* Set a lighter color for disabled state */
+  }
+  
+  .time-button:disabled:hover {
+    background-color: #aeaeae; /* Prevent any change on hover */
+    color: #111; /* Keep the text color the same */
+    pointer-events: none; /* Ensure no events are triggered on hover */
+  }
+  

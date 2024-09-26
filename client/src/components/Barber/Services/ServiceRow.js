@@ -1,26 +1,25 @@
-import React from 'react'
-import './ServiceRow.css'
+import React from 'react';
+import { TableRow, TableCell, IconButton } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
 
-const ServiceRow = ({service, deleteService}) => {
-    console.log('user row rendred')
+const ServiceRow = ({ service, deleteService }) => {
+  return (
+    <TableRow>
+      <TableCell>{service.name}</TableCell>
+      <TableCell>{service.description}</TableCell>
+      <TableCell>{service.price} DT</TableCell>
+      <TableCell>{service.duration} minutes</TableCell>
+      <TableCell>
+        <IconButton
+          aria-label="delete"
+          color="secondary"
+          onClick={() => deleteService(service._id)}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </TableCell>
+    </TableRow>
+  );
+};
 
-    return (
-
-        <tr className='table-row'>
-            <td>{service.name}</td>
-            <td>{service.description}</td>
-            <td>{service.price} DT</td>
-            <td>{service.duration} minutes</td>
-            <td className='bg-action-white'>
-                {/* <button onClick={() =>editUser(user._id)} className='btn-icon btn-blue-color'>
-                    <i className="fa fa-pencil" aria-hidden="true"></i>
-                </button> */}
-                <button onClick={() => deleteService(service._id)} className='btn-icon btn-red-color'>
-                    <i className="fa fa-trash" aria-hidden="true"></i>
-                </button>
-            </td>  
-        </tr>           
-    )
-}
-
-export default ServiceRow
+export default ServiceRow;

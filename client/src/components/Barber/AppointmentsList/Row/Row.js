@@ -1,21 +1,44 @@
 import React from 'react';
-import './Row.css';
+import { makeStyles } from '@material-ui/core/styles';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
 import TableData from '../TableData/TableData';
 
+const useStyles = makeStyles((theme) => ({
+  leftHeaderCell: {
+    fontWeight: 'bold',
+    backgroundColor: theme.palette.primary.dark,
+    color: theme.palette.common.white,
+    textAlign: 'center',
+    padding: theme.spacing(1),
+  },
+  dataCell: {
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    verticalAlign: 'middle',
+    minWidth: 100,
+  },
+}));
+
 const Row = ({ appointments, time }) => {
-  console.log('Row rendered');
+  const classes = useStyles();
 
   return (
-    <tr>
-      <th className="left-th">{time}</th>
-      <TableData appointments={appointments.filter((obj) => obj.day === 'Sun')} time={time} day="Sun" />
-      <TableData appointments={appointments.filter((obj) => obj.day === 'Mon')} time={time} day="Mon" />
-      <TableData appointments={appointments.filter((obj) => obj.day === 'Tue')} time={time} day="Tue" />
-      <TableData appointments={appointments.filter((obj) => obj.day === 'Wed')} time={time} day="Wed" />
-      <TableData appointments={appointments.filter((obj) => obj.day === 'Thu')} time={time} day="Thu" />
-      <TableData appointments={appointments.filter((obj) => obj.day === 'Fri')} time={time} day="Fri" />
-      <TableData appointments={appointments.filter((obj) => obj.day === 'Sat')} time={time} day="Sat" />
-    </tr>
+    <TableRow>
+      {/* Time Cell */}
+      <TableCell className={classes.leftHeaderCell}>{time}</TableCell>
+      
+      {/* Table Data for Each Day */}
+      {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+        <TableCell key={day} className={classes.dataCell}>
+          <TableData
+            appointments={appointments.filter((obj) => obj.day === day)}
+            time={time}
+            day={day}
+          />
+        </TableCell>
+      ))}
+    </TableRow>
   );
 };
 

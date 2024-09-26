@@ -1,51 +1,113 @@
-
-
-.appointments-list{
-    display: inline;
+.appointments-list {
+    padding: 20px;
+    box-sizing: border-box;
 }
 
-.appointments-list table{
+.appointments-list table {
     width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* Ensures the table adjusts its width based on the container */
 }
 
-.left-th{
+.left-th {
     background-color: rgb(51, 51, 50);
     height: 35px;
     padding: 10px;
     color: white;
 }
 
-#td-white{
+#td-white {
     background-color: white;
 }
 
-.appointments-list td{
+.appointments-list td {
     padding: 10px;
+    text-align: center;
+    overflow: hidden; /* Prevents overflow of content */
 }
 
-.appointments-list tr:nth-child(even){
+.appointments-list th, .appointments-list td {
+    word-wrap: break-word; /* Allows long words or content to wrap */
+}
+
+.appointments-list tr:nth-child(even) {
     background-color: #f2f2f2;
 }
 
-/* table tr{
-    transition: 0.2s all ease-in-out;
-} */
-
-.appointments-list tr:hover {background-color: #ddd;}
-
-.appointments-list h1,h3{
-    /* margin: 20px; */
-    text-align: center;
+.appointments-list tr:hover {
+    background-color: #ddd;
 }
 
-.admin-profile-links-container{
+.appointments-list h1, h3 {
     text-align: center;
-    /* border: 1px solid black; */
+    font-size: 1.5rem; /* Adjusted font size for better responsiveness */
 }
 
-.admin-profile-link{
-    margin: 0px 6px;
+.admin-profile-links-container {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.admin-profile-link {
+    margin: 0 6px;
     color: rgb(8, 121, 187);
+    text-decoration: none;
 }
 
+/* Navigation buttons */
+.navigation-buttons {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
 
+.navigation-buttons button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    margin: 0 5px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .appointments-list table {
+        font-size: 0.9rem;
+        overflow-x: auto; /* Enables horizontal scrolling */
+        display: block; /* Allows horizontal scrolling */
+    }
+    
+    .appointments-list h1 {
+        font-size: 1.2rem;
+    }
+
+    .appointments-list h3 {
+        font-size: 1rem;
+    }
+
+    .navigation-buttons {
+        flex-direction: column;
+    }
+
+    .navigation-buttons button {
+        margin: 5px 0;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .appointments-list h1 {
+        font-size: 1rem;
+    }
+
+    .appointments-list h3 {
+        font-size: 0.9rem;
+    }
+
+    .appointments-list td {
+        padding: 8px;
+        font-size: 0.9rem; /* Further reduced font size for very small screens */
+    }
+
+    .appointments-list table {
+        font-size: 0.8rem; /* Further reduced font size for very small screens */
+    }
+}

@@ -20,11 +20,11 @@ const TableData = ({ appointments, time, day }) => {
         >
           <span className="td-flex-icons">
             <i className="fa fa-user" aria-hidden="true"></i>
-            {appointments[0].name.charAt(0).toUpperCase() + appointments[0].name.slice(1)}
+            {appointments[0].cname.charAt(0).toUpperCase() + appointments[0].cname.slice(1)}
           </span>
         </span>
       ) : (
-        <span className="td-empty">Empty</span>
+        <span className="td-empty">vide</span>
       )}
       {showModal && (
         <Modal

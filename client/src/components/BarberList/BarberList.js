@@ -1,107 +1,139 @@
-// import React, {useState, useEffect} from 'react'
-// import './BarberList.css'
-// import Navbar from '../Home/Navbar/Navbar'
-// import axios from 'axios'
-// import BarberRow from './BarberRow'
+import React, { useState, useEffect } from 'react';
+import { Drawer, FormControl, InputLabel, Select, MenuItem, Grid, IconButton, Hidden, TextField, Typography } from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
+import axios from 'axios';
+import Navbar from '../Home/Navbar/Navbar';
+import BarberCard from './BarberCard';
+import useStyles from './styles';
+import { useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
+const BarberList = () => {
+    const classes = useStyles();
+    const [barbers, setBarbers] = useState([]);
+    const [filteredBarbers, setFilteredBarbers] = useState([]);
+    const [states, setStates] = useState([]);
+    const [selectedState, setSelectedState] = useState('');
+    const [searchTerm, setSearchTerm] = useState(''); // New state for search term
+    const [mobileOpen, setMobileOpen] = useState(false);
 
-
-// const BarberList = (props) => {
-
-//     const [barbers, setBarbers] = useState([])
-
-
-   
-
-//     useEffect(()=>{
-//         console.log('barber list rendred')
-//         axios.get('http://localhost:5000/getbarbers').then((response) => {
-
-        
-//             let {error} = response.data
-//             if(error){
-//                 console.log(error)
-//             }
-//             else{
-//                 console.log('all the barbers: ',response.data)
-//                 setBarbers(response.data)
-//             }
-//         })
-//     },[])
-
-
-//     return (
-//         <div>
-//             <Navbar/>
-//             <div className='user-profile-container'>
-//                 <div className='user-profile-right'>
-//                     {barbers.map((barber) => <BarberRow barber={barber} />)}
-//                 </div>
-//             </div>      
-//         </div>
-//     )
-// }
-
-// export default BarberList
-
-
-
-
-import React, { useState, useEffect } from 'react'
-import './BarberList.css'
-import Navbar from '../Home/Navbar/Navbar'
-import axios from 'axios'
-import BarberRow from './BarberRow'
-
-const BarberList = (props) => {
-    const [barbers, setBarbers] = useState([])
-    const [filteredBarbers, setFilteredBarbers] = useState([])
-    const [states, setStates] = useState([])
-    const [selectedState, setSelectedState] = useState('')
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // Check if screen size is mobile
 
     useEffect(() => {
-        console.log('barber list rendered')
         axios.get('http://localhost:5000/getbarbers').then((response) => {
-            let { error } = response.data
+            const { error, data } = response;
             if (error) {
-                console.log(error)
+                console.log(error);
             } else {
-                console.log('all the barbers: ', response.data)
-                setBarbers(response.data)
-                setFilteredBarbers(response.data)
-                const uniqueStates = [...new Set(response.data.map((barber) => barber.state))]
-                setStates(uniqueStates)
+                setBarbers(data);
+                setFilteredBarbers(data);
+                const uniqueStates = [...new Set(data.map(barber => barber.state))];
+                setStates(uniqueStates);
             }
-        })
-    }, [])
+        });
+    }, []);
+
+    // Function to filter barbers based on state and search term
+    const filterBarbers = (barbers, state, term) => {
+        return barbers.filter(barber => {
+            const matchesState = state === '' || barber.state === state;
+            const matchesTerm = 
+                (barber.fname ? barber.fname.toLowerCase().includes(term.toLowerCase()) : false) ||
+                (barber.lname ? barber.lname.toLowerCase().includes(term.toLowerCase()) : false) || 
+                (barber.sname ? barber.sname.toLowerCase().includes(term.toLowerCase()) : false);
+            return matchesState && matchesTerm;
+        });
+    };
+    
 
     const handleStateChange = (e) => {
-        setSelectedState(e.target.value)
-        if (e.target.value === '') {
-            setFilteredBarbers(barbers)
-        } else {
-            const filtered = barbers.filter((barber) => barber.state === e.target.value)
-            setFilteredBarbers(filtered)
-        }
-    }
+        setSelectedState(e.target.value);
+        setFilteredBarbers(filterBarbers(barbers, e.target.value, searchTerm));
+    };
+
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+        setFilteredBarbers(filterBarbers(barbers, selectedState, e.target.value));
+    };
+
+    const handleDrawerToggle = () => {
+        setMobileOpen(!mobileOpen);
+    };
+
+    const drawer = (
+        <div>
+            <FormControl fullWidth className={classes.formControl}>
+                <center><Typography variant='h5' style={{fontWeight: 'bold' }}>Filtre</Typography></center><br/><br/>
+                <Typography>Filtrer par gouvernorat</Typography>
+                <Select value={selectedState} onChange={handleStateChange}>
+                    <MenuItem value=''><em>Tous</em></MenuItem>
+                    {states.map((state) => <MenuItem key={state} value={state}>{state}</MenuItem>)}
+                </Select>
+            </FormControl>
+            <TextField
+                className={classes.searchInput}
+                label="Rechercher"
+                variant="outlined"
+                value={searchTerm}
+                onChange={handleSearchChange}
+                placeholder="Chercher par nom ou salon"
+            />
+        </div>
+    );
 
     return (
-        <div>
+        <>
             <Navbar />
-            <div className='user-profile-container'>
-                <div className='user-profile-right'>
-                    <div className='filter-container' align='right'>
-                        <select className="custom-select" value={selectedState} onChange={handleStateChange}>
-                            <option value=''>Filter by state</option>
-                            {states.map((state) => <option value={state}>{state}</option>)}
-                        </select>
-                    </div>
-                    <br/>
-                    {filteredBarbers.map((barber) => <BarberRow barber={barber} />)}
-                </div>
-            </div>
-        </div>
-    )
-}
+            <div className={classes.root}>
+                {/* Drawer for Desktop */}
+                <Hidden xsDown implementation="css">
+                    <Drawer
+                        variant="permanent"
+                        className={classes.drawer}
+                        classes={{ paper: classes.drawerPaper }}
+                        open
+                    >
+                        {drawer}
+                    </Drawer>
+                </Hidden>
 
-export default BarberList
+                {/* Drawer for Mobile */}
+                <Hidden smUp>
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        aria-label="menu"
+                        onClick={handleDrawerToggle}
+                        className={classes.menuButton}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                    <Drawer
+                        variant="temporary"
+                        anchor="left"
+                        open={mobileOpen}
+                        onClose={handleDrawerToggle}
+                        classes={{ paper: classes.drawerPaper }}
+                        ModalProps={{ keepMounted: true }} // Better performance on mobile
+                    >
+                        {drawer}
+                    </Drawer>
+                </Hidden>
+
+                {/* Main Content */}
+                <main className={classes.content}>
+                    <Grid container spacing={3}>
+                        {filteredBarbers.map(barber => (
+                            <Grid item xs={12} sm={6} md={4} key={barber._id}>
+                                <BarberCard barber={barber} />
+                            </Grid>
+                        ))}
+                    </Grid>
+                </main>
+            </div>
+        </>
+    );
+};
+
+export default BarberList;

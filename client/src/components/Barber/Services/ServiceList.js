@@ -1,162 +1,187 @@
-import React, {useEffect, useState} from 'react'
-import './ServiceList.css'
-import axios from 'axios'
-import ServiceRow from './ServiceRow'
-import {getCookie} from '../../../cookies';
+import React, { useEffect, useState } from 'react';
+import { Grid, TextField, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from '@material-ui/core';
+import axios from 'axios';
+import { getCookie } from '../../../cookies';
+import ServiceRow from './ServiceRow';
+import { makeStyles } from '@material-ui/core/styles';
+import { Toaster , toast } from 'react-hot-toast';
 
+const useStyles = makeStyles((theme) => ({
+  container: {
+    padding: theme.spacing(3),
+    marginTop: theme.spacing(4),
+  },
+  form: {
+    marginBottom: theme.spacing(4),
+  },
+  button: {
+    marginTop: theme.spacing(2),
+  },
+  tableHeader: {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.common.white,
+  },
+}));
 
 const ServiceList = () => {
-    const [services, setServices] = useState([]);
-    const [barberID, setBarberID] = useState('');
-    const [newService, setNewService] = useState({
+  const classes = useStyles();
+  const [services, setServices] = useState([]);
+  const [barberID, setBarberID] = useState('');
+  const [newService, setNewService] = useState({
+    name: '',
+    description: '',
+    price: '',
+    duration: '',
+  });
+
+  useEffect(() => {
+    setBarberID(getCookie('id'));
+    console.log('upload user profile');
+  }, []);
+
+  useEffect(() => {
+    console.log('services list rendered');
+    if (barberID) {
+      axios.get(`http://localhost:5000/getservices2?barberID=${barberID}`).then((response) => {
+        const { error } = response.data;
+        if (error) {
+          console.log(error);
+        } else {
+          setServices(response.data);
+        }
+      });
+    }
+  }, [barberID]);
+
+  const addService = async () => {
+    const { name, description, price, duration } = newService;
+    if (!name || !description || !price || !duration) {
+      return toast.error('Veuillez remplir tous les détails du service');
+    }
+
+    try {
+      const response = await axios.post('http://localhost:5000/addservice', {
+        barberID,
+        ...newService,
+      });
+      const newServiceData = response.data;
+      setServices((prevServices) => [...prevServices, newServiceData]);
+      setNewService({
         name: '',
         description: '',
         price: '',
         duration: '',
       });
+      window.location.reload()
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-    useEffect(() =>{
-        setBarberID(getCookie('id'))
-        console.log('upload user profile')
-    },[])
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setNewService((prevService) => ({ ...prevService, [name]: value }));
+  };
 
-    useEffect(()=>{
-        console.log('services list rendred')
-        axios.get(`http://localhost:5000/getservices2?barberID=${barberID}`).then((response) => {
+  const deleteService = async (serviceID) => {
+    try {
+      await axios.delete(`http://localhost:5000/deleteservice/${serviceID}`);
+      setServices((prevServices) => prevServices.filter((service) => service._id !== serviceID));
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-        
-            let {error} = response.data
-            if(error){
-                console.log(error)
-            }
-            else{
-                console.log('all the services: ',response.data)
-                setServices(response.data)
-            }
-        })
-    },[barberID])
-
-    
-    const addService = async () => {
-      if(newService.name==='' || newService.description==='' || newService.price==='' || newService.duration==='')
-         return alert("Pease fill service details")
-      else{
-        try {
-          const response = await axios.post(`http://localhost:5000/addservice`, {
-            barberID,
-            ...newService,
-          });
-          console.log('Server response:', response.data);
-          const newServiceData = response.data;
-          console.log('New service data:', newServiceData);
-          setServices([...services, newServiceData]);
-          console.log('Updated services state:', services);
-          setNewService({
-            name: '',
-            description: '',
-            price: '',
-            duration: '',
-          });
-        } catch (error) {
-          console.error(error);
-        }
-      }};
-
-      const handleInputChange = (event) => {
-        const { name, value } = event.target;
-        setNewService((prevService) => ({ ...prevService, [name]: value }));
-      };
-
-    
-    const deleteService = async (serviceID) => {
-        try {
-          await axios.delete(`http://localhost:5000/deleteservice/${serviceID}`);
-          // Update the services state to remove the deleted service
-          setServices(services.filter((service) => service._id !== serviceID));
-        } catch (error) {
-          console.error(error);
-        }
-      };
-
-
-    return (
-        <div className='user-list'>
-            <h2>Add service:</h2><hr/>
-            <form>
-        <div className='input-container'>
-          <label>
-            Name:
-            <input
-              type='text'
-              name='name'
-              placeholder=''
+  return (
+    <><Toaster
+    position="top-center"
+    reverseOrder={false}
+  />
+    <Grid container direction="column" className={classes.container}>
+    <Typography variant="h4" align="center">
+        Services
+      </Typography>
+      <h2>Ajouter Service:</h2>
+      <Grid item className={classes.form}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Nom du Service"
+              fullWidth
+              name="name"
               value={newService.name}
               onChange={handleInputChange}
-              className='input-field'
+              variant="outlined"
             />
-          </label>
-        </div>
-        <div className='input-container'>
-          <label>
-            Description:
-            <input
-              type='text'
-              name='description'
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Description"
+              fullWidth
+              name="description"
               value={newService.description}
               onChange={handleInputChange}
-              className='input-field'
+              variant="outlined"
             />
-          </label>
-        </div>
-        <div className='input-container'>
-          <label>
-            Price:
-            <input
-              type='number'
-              name='price'
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Prix (DT)"
+              type="number"
+              fullWidth
+              name="price"
               value={newService.price}
               onChange={handleInputChange}
-              className='input-field'
+              variant="outlined"
             />
-          </label>
-        </div>
-        <div className='input-container'>
-          <label>
-            Duration:
-            <input
-              type='number'
-              name='duration'
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Durée (minutes)"
+              type="number"
+              fullWidth
+              name="duration"
               value={newService.duration}
               onChange={handleInputChange}
-              className='input-field'
+              variant="outlined"
             />
-          </label>
-        </div>
-        <button type='button' onClick={addService} className='add-button'>
-          Add Service
-        </button>
-      </form>
-            <hr/><br/>
-            <h2>Services list:</h2>
-            
-            <table>
-                <thead>
-                    <tr className='table-header'>
-                        <th>Name</th>
-                        <th>Details</th>
-                        <th>Price</th>
-                        <th>Duration</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {services.map((service) => <ServiceRow deleteService={deleteService} service={service}/>)}
-                </tbody>
-            </table>    
-        </div>
+          </Grid>
+        </Grid>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={addService}
+          className={classes.button}
+        >
+          Ajouter Service
+        </Button>
+      </Grid>
 
-        
-    )
-}
+      <h2>Liste de Services:</h2>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell className={classes.tableHeader}>Nom</TableCell>
+              <TableCell className={classes.tableHeader}>Description</TableCell>
+              <TableCell className={classes.tableHeader}>Prix</TableCell>
+              <TableCell className={classes.tableHeader}>Durée</TableCell>
+              <TableCell className={classes.tableHeader}>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {services.map((service) => (
+              <ServiceRow
+                key={service._id}
+                service={service}
+                deleteService={deleteService}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Grid></>
+  );
+};
 
-export default ServiceList
+export default ServiceList;

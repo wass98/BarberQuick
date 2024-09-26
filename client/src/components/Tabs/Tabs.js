@@ -1,207 +1,150 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
+import {
+  Drawer, List, ListItem, ListItemIcon, ListItemText, CssBaseline, Typography, IconButton, useMediaQuery, useTheme,
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-// import PhoneIcon from '@material-ui/icons/Phone';
-// import PersonPinIcon from '@material-ui/icons/PersonPin';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
+import MenuIcon from '@material-ui/icons/Menu'; // Hamburger menu icon
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
+import RoomServiceIcon from '@material-ui/icons/RoomService';
+import PagesIcon from '@material-ui/icons/Description';
 
-// import UserList from '../Admin/UsersList/UsersList'
 import ServiceList from '../Barber/Services/ServiceList';
-import AppointmentsList from '../Barber/AppointmentsList/AppointmentsList'
+import AppointmentsList from '../Barber/AppointmentsList/AppointmentsList';
 import AppReqList from '../Barber/AppointmentRequests/AppReqList';
-import './Tabs.css'
-import WorkTime from '../Barber/WorkingTime/WorkTime'
-
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`scrollable-prevent-tabpanel-${index}`}
-      aria-labelledby={`scrollable-prevent-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `scrollable-prevent-tab-${index}`,
-    'aria-controls': `scrollable-prevent-tabpanel-${index}`,
-  };
-}
+import Dashboard from '../Barber/Dashboard/Dashboard';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    flexGrow: 1,
+    display: 'flex',
     width: '100%',
-    backgroundColor: theme.palette.background.paper,
-   
+    backgroundColor: '#f4f6f8', // Light background color for the entire component
+    minHeight: '100vh', // Ensure it takes full viewport height
   },
-  indicator: {
-    backgroundColor:'#FFF',
-
+  menuButton: {
+    margin: theme.spacing(2),
+    color: 'black',
+    position: 'absolute',
+    top: 60,
+    left: 20,
+    zIndex: 1,
+  },
+  drawer: {
+    width: 240,
+    flexShrink: 0,
+  },
+  drawerPaper: {
+    width: 240,
+    backgroundColor: '#18202c', // Custom background color for the drawer
+    color: '#ffffff',
+    marginTop: 60,
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    marginLeft: 240, // Default for desktop, adjust if drawer is open
+    transition: 'margin 0.3s',
+    height: '100%',
+    backgroundColor: '#e0e3e5', // Light grey background for the content area
+  },
+  toolbar: theme.mixins.toolbar,
+  listItem: {
+    '&:hover': {
+      backgroundColor: '#303f9f', // Hover effect for menu items
+    },
+  },
+  activeItem: {
+    backgroundColor: '#3949ab', // Color for the selected item
   },
 }));
 
-export default function ScrollableTabsButtonPrevent() {
+function CPanel() {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  // List of items for sidenav with corresponding components
+  const sections = [
+    { text: 'Tableau de Bord', icon: <DashboardIcon />, component: <Dashboard /> },
+    { text: 'Calendrier', icon: <CalendarTodayIcon />, component: <AppointmentsList /> },
+    { text: 'Demandes de rendez-vous', icon: <RoomServiceIcon />, component: <AppReqList /> },
+    { text: 'Services', icon: <PagesIcon />, component: <ServiceList /> },
+  ];
+
+  // Handle drawer toggle
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
   };
+
+  // Drawer content
+  const drawer = (
+    <div>
+      <div className={classes.toolbar} />
+      <List>
+        {sections.map((section, index) => (
+          <ListItem
+            button
+            key={section.text}
+            className={`${classes.listItem} ${activeIndex === index ? classes.activeItem : ''}`}
+            onClick={() => {
+              setActiveIndex(index);
+              if (isMobile) setMobileOpen(false); // Close drawer on item click for mobile
+            }}
+          >
+            <ListItemIcon style={{ color: '#ffffff' }}>{section.icon}</ListItemIcon>
+            <ListItemText primary={section.text} />
+          </ListItem>
+        ))}
+      </List>
+    </div>
+  );
 
   return (
     <div className={classes.root}>
-      <AppBar position="absolute">
-        <Tabs
-          TabIndicatorProps={{style: {backgroundColor: "#4FBAE4"}}}
-          value={value}
-          onChange={handleChange}
-          variant="scrollable"
-          scrollButtons="off"
-          aria-label="scrollable prevent tabs example"
-          className='tabs'
+      <CssBaseline />
+
+      {/* Hamburger Menu Icon (only in mobile version) */}
+      {isMobile && (
+        <IconButton
+          className={classes.menuButton}
+          onClick={handleDrawerToggle}
         >
-          {/* <Tab label="Dashboard" {...a11yProps(1)} /> */}
-          <Tab label="Appointment List" {...a11yProps(0)} />
-          <Tab label="Appointment requests" {...a11yProps(2)} />
-          <Tab label="Services List" {...a11yProps(3)} />
-          <Tab label="Working time" {...a11yProps(4)} />
+          <MenuIcon />
+        </IconButton>
+      )}
 
+      {/* Side Navigation (Drawer) */}
+      <Drawer
+        variant={isMobile ? "temporary" : "permanent"}
+        open={isMobile ? mobileOpen : true}
+        onClose={isMobile ? handleDrawerToggle : undefined}
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+        ModalProps={{
+          keepMounted: true,
+        }}
+      >
+        {drawer}
+      </Drawer>
 
-        </Tabs>
-      </AppBar>
-      {/* <TabPanel className='tab-panel' value={value} index={0}>
-        <center><h1>Dashboard</h1></center>
-      </TabPanel> */}
-      <TabPanel value={value} index={0}>
-       <AppointmentsList/>
-      </TabPanel>
-      <TabPanel className='tab-panel' value={value} index={1}>
-        <center><h1>Appointment requests</h1></center>
-        <AppReqList />
-      </TabPanel>
-      <TabPanel className='tab-panel' value={value} index={2}>
-        <center><h1>Services List</h1></center>
-        <ServiceList/>
-      </TabPanel>
-      <TabPanel className='tab-panel' value={value} index={3}>
-        <center><h1>Working Time</h1></center>
-        <WorkTime />
-      </TabPanel>
+      {/* Main Content - Render content based on the active index */}
+      <main
+        className={classes.content}
+        style={{
+          marginLeft: isMobile ? 0 : 240,
+          width: isMobile ? '100%' : `calc(100% - 240px)`,
+        }}
+      >
+        <div className={classes.toolbar} />
+        <div>
+          {sections[activeIndex].component}
+        </div>
+      </main>
     </div>
   );
 }
 
-
-
-
-
-
-
-
-
-
-
-// import React from 'react';
-// import PropTypes from 'prop-types';
-// import { makeStyles } from '@material-ui/core/styles';
-// import AppBar from '@material-ui/core/AppBar';
-// import Tabs from '@material-ui/core/Tabs';
-// import Tab from '@material-ui/core/Tab';
-// import Typography from '@material-ui/core/Typography';
-// import Box from '@material-ui/core/Box';
-
-// import UserList from '../Admin/UsersList/UsersList'
-// import AppointmentsList from '../Admin/AppointmentsList/AppointmentsList'
-
-// function TabPanel(props) {
-//   const { children, value, index, ...other } = props;
-
-//   return (
-//     <div
-//       role="tabpanel"
-//       hidden={value !== index}
-//       id={`simple-tabpanel-${index}`}
-//       aria-labelledby={`simple-tab-${index}`}
-//       {...other}
-//     >
-//       {value === index && (
-//         <Box p={3}>
-//           <Typography>{children}</Typography>
-//         </Box>
-//       )}
-//     </div>
-//   );
-// }
-
-// TabPanel.propTypes = {
-//   children: PropTypes.node,
-//   index: PropTypes.any.isRequired,
-//   value: PropTypes.any.isRequired,
-// };
-
-// function a11yProps(index) {
-//   return {
-//     id: `simple-tab-${index}`,
-//     'aria-controls': `simple-tabpanel-${index}`,
-//   };
-// }
-
-// const useStyles = makeStyles((theme) => ({
-//   root: {
-//     flexGrow: 1,
-//     backgroundColor: theme.palette.background.paper,
-//   },
-// }));
-
-// export default function SimpleTabs() {
-//   const classes = useStyles();
-//   const [value, setValue] = React.useState(0);
-
-//   const handleChange = (event, newValue) => {
-//     setValue(newValue);
-//   };
-
-//   return (
-//     <div className={classes.root}>
-//       <AppBar position="static">
-//         <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-//           <Tab label="Item One" {...a11yProps(0)} />
-//           <Tab label="Item Two" {...a11yProps(1)} />
-//           <Tab label="Item Three" {...a11yProps(2)} />
-//         </Tabs>
-//       </AppBar>
-//       <TabPanel value={value} index={0}>
-//         <AppointmentsList/>
-//       </TabPanel>
-//       <TabPanel value={value} index={1}>
-//         <UserList/>
-//       </TabPanel>
-//       <TabPanel value={value} index={2}>
-//         Item Three
-//       </TabPanel>
-//     </div>
-//   );
-// }
+export default CPanel;

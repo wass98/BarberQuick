@@ -6,6 +6,7 @@ import axios from 'axios';
 import ErrorMsg from '../ErrorMsg/ErrorMsg'
 import loadingIcon from '../../assets/loading_icon.gif'
 import Navbar from '../Home/Navbar/Navbar'
+import { checkCookie } from '../../cookies';
 
 
 
@@ -14,6 +15,8 @@ const RegisterB = (props) => {
     const [pass, setPass] = useState('')
     const [confirmPass, setConfirmPass] = useState('')
     const [error, setError] = useState('')
+
+    if (checkCookie('status')) props.history.push({ pathname: '/' });
 
     useEffect( ()=>{
         console.log('register rendered')
@@ -57,7 +60,7 @@ const RegisterB = (props) => {
             <div className='register-container'>
                 <div className='register-form'>
                     <div className='register-info'>
-                        <center><h1>Barber  Register</h1></center>
+                        <center><h1>Registre des Coiffeurs</h1></center>
                         <img src={logo} alt=''></img>
                     </div>
                     <div className='form-container'> 
@@ -71,14 +74,14 @@ const RegisterB = (props) => {
                             name='email'    
                             onChange={(e) => setEmail(e.target.value)}
                         />
-                        <p>Password:</p>
+                        <p>Mot de passe:</p>
                         <input type="password"
                             placeholder='Password...'
                             className='form-container-input'
                             name='password'
                             onChange={(e) => setPass(e.target.value)}
                         />
-                        <p>Confirm Password:</p>
+                        <p>Confirmer Mot de passe:</p>
                         <input type="password"
                             placeholder='Password...'
                             className='form-container-input'
@@ -91,7 +94,7 @@ const RegisterB = (props) => {
                         </div>
                         <div className='new-account-login'>
                             <Link to='/login' className='new-account-link'>
-                                You have an account? Login now
+                            Vous avez un compte ? Connectez-vous maintenant
                             </Link> 
                         </div> 
                         <div className='login-div'>

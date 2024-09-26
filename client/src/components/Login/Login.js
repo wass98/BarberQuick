@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {setCookie} from '../../cookies'
+import {setCookie ,checkCookie} from '../../cookies'
 import './Login.css'
 import logo from '../../assets/logo.png'
 import { Link } from 'react-router-dom'
@@ -19,6 +19,8 @@ const Login = (props) => {
 
         
     },[])
+
+    if (checkCookie('status')) props.history.push({ pathname: '/' });
 
     const handleLogin = async () => {
         let loading = document.querySelector('.login-loading')
@@ -65,7 +67,7 @@ const Login = (props) => {
             <div className='login-container'>
                 <div className='register-form'>
                     <div className='register-info'>
-                        <h1>Login</h1>
+                        <h1>Se connecter</h1>
                         <img src={logo} alt=''></img>
                     </div>
                     <div className='form-container'> 
@@ -79,7 +81,7 @@ const Login = (props) => {
                             name='email'
                             onChange={(e) => setEmail(e.target.value)}
                         />
-                        <p>Password:</p>
+                        <p>Mot de Passe:</p>
                         <input type="password"
                             placeholder='Password...'
                             className='form-container-input'
@@ -92,7 +94,7 @@ const Login = (props) => {
                         </div> 
                         <div className='new-account-login'>
                             <Link to='/register' className='new-account-link'>
-                                You don't have account?
+                                Vous n'avez pas de compte ?
                             </Link> 
                         </div>
                         <div className='login-div'>

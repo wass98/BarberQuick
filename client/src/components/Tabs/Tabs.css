@@ -1,12 +1,19 @@
-
-.tabs{
-    background-image: linear-gradient(to right, rgb(47, 50, 53) , rgb(107, 111, 114));
+.tabs {
+    background-image: linear-gradient(to right, rgb(47, 50, 53), rgb(107, 111, 114));
 }
 
-.tab-panel{
+.tab-panel {
     height: 100vh;
+    overflow: auto; /* Ensures content is scrollable if it overflows */
 }
 
-.tab-panell{
-    height: 100vh;
+/* Ensure content within TabPanels is responsive */
+@media (max-width: 768px) {
+    .tabs {
+        font-size: 0.8rem;
+    }
+
+    .tab-panel {
+        height: auto;
+    }
 }

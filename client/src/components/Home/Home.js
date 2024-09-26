@@ -1,7 +1,9 @@
 import React from 'react'
 import Hero from './Hero/Hero'
 import Navbar from './Navbar/Navbar'
-// import Services from './Services/Services'
+import Footer from './Footer/Footer'
+import Services from './Services/Services'
+import Contact from './Contact/Contact'
 // import Hours from './Hours/Hours'
 
 import './Home.css'
@@ -11,8 +13,10 @@ const Home = () => {
         <div>
             <Navbar/>
             <Hero/>
-            {/* <Services/>
-            <Hours/>       */}
+            <Services/>
+            {/* <Hours/>       */}
+            <Contact />
+
         </div>
     )
 }

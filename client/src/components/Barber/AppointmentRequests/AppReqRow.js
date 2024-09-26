@@ -1,56 +1,60 @@
-import React from 'react'
-import './AppReqRow.css'
-import axios from 'axios'
+import React from 'react';
+import { TableRow, TableCell, Button } from '@material-ui/core';
+import axios from 'axios';
 
-const AppReqRow = ({req, handleUpdate}) => {
-    console.log('appReq row rendred')
+const AppReqRow = ({ req, handleUpdate }) => {
+  const handleAccept = async () => {
+    try {
+      const response = await axios.put(`http://localhost:5000/updateappointment`, {
+        id: req._id,
+        status: 'Accepté',
+      });
+      handleUpdate({ ...req, status: 'Accepté' });
+      window.location.reload()
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
+  const handleDecline = async () => {
+    try {
+      const response = await axios.put(`http://localhost:5000/updateappointment`, {
+        id: req._id,
+        status: 'Refusé',
+      });
+      handleUpdate({ ...req, status: 'Refusé' });
+      window.location.reload()
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
+  return (
+    <TableRow>
+      <TableCell>{req.cname}</TableCell>
+      <TableCell>{` ${req.date} à ${req.time}`}</TableCell>
+      <TableCell>{req.service}</TableCell>
+      <TableCell>{req.price} DT</TableCell>
+      <TableCell>{req.avgTime} minutes</TableCell>
+      <TableCell>
+        <Button
+          onClick={handleAccept}
+          variant="contained"
+          color="primary"
+          style={{ marginRight: '8px' }}
+        >
+          Accepter
+        </Button>
+        <Button
+          onClick={handleDecline}
+          variant="contained"
+          color="secondary"
+        >
+          Refuser
+        </Button>
+      </TableCell>
+    </TableRow>
+  );
+};
 
-    const handleAccept = async () => {
-      try {
-        const response = await axios.put(`http://localhost:5000/updateappointment`, {
-          id: req._id,
-          status: 'accepted',
-        });
-        console.log(response.data);
-        handleUpdate({ ...req, status: 'accepted' }); // Update the appReq state
-      } catch (error) {
-        console.error(error);
-      }
-    };
-  
-    const handleDecline = async () => {
-      try {
-        const response = await axios.put(`http://localhost:5000/updateappointment`, {
-          id: req._id,
-          status: 'declined',
-        });
-        console.log(response.data);
-        handleUpdate({ ...req, status: 'declined' }); // Update the appReq state
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    return (
-
-        <tr className='table-row'>
-            <td>{req.name}</td>
-            <td> {req.day}, {req.date} - {req.time}</td>
-            <td>{req.service}</td>
-            <td>{req.price}</td>
-            <td>{req.avgTime}</td>
-            <td className='bg-action-white'>
-            <button onClick={handleAccept} className='btn-icon btn-green-color'>
-                Accept
-            </button>
-            <button onClick={handleDecline} className='btn-icon btn-red-color'>
-                Decline
-            </button>
-            </td>  
-        </tr>           
-    )
-}
-
-export default AppReqRow
+export default AppReqRow;

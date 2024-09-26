@@ -1,100 +1,85 @@
-import React, {useState} from 'react'
-import './Appointment.css'
-import Navbar from '../Home/Navbar/Navbar'
+import React, { useState } from 'react';
+import './Appointment.css';
+import Navbar from '../Home/Navbar/Navbar';
 import "react-datepicker/dist/react-datepicker.css";
-// import {fullTime} from '../../time'
-import axios from 'axios'
+import axios from 'axios';
 import { useLocation, useHistory } from 'react-router-dom';
-// import ErrorMsg from '../ErrorMsg/ErrorMsg';
-//import {getCookie, checkCookie} from '../../cookies'
+import { Toaster, toast } from 'react-hot-toast';
 
 const Confirm = () => {
-    
     const history = useHistory();
-    const [error, setError]=useState()
+    const [error, setError] = useState();
     const location = useLocation();
     const appointmentData = location.state;
 
     console.log(appointmentData);
     const makeAppointment = async () => {
         try {
-          const response = await axios.post('http://localhost:5000/appointment', appointmentData);
-          if (response.data.error) {
-            setError(response.data.error);
-            setTimeout(() => {
-              setError('');
-            }, 6000);
-          } else {
-            alert(response.data);
-            history.push({ pathname: '/profile' });
-          }
+            const response = await axios.post('http://localhost:5000/appointment', appointmentData);
+            if (response.data.error) {
+                toast.error(response.data.error);
+                setTimeout(() => {
+                    history.push({ pathname: '/userapp' });
+                  }, 2000);
+            } else {
+                toast.success(response.data.message);
+                setTimeout(() => {
+                    history.push({ pathname: '/userapp' });
+                  }, 2000);
+            }
         } catch (error) {
-          console.error(error);
-          setError('An error occurred while making the appointment');
+            toast.error("Erreur!");
+            setTimeout(() => {
+                history.push({ pathname: '/userapp' });
+              }, 2000);
+            
         }
-      };
-      console.log(error)
+    };
     
     return (
         <div>
-            <Navbar/>
+            <Navbar />
+            <Toaster position="top-center" reverseOrder={false} />
             <div className='appointment-container'>
                 <div className='appointment-form'>
-                    <h1>Confirm Appointment</h1>
+                    <h1>Confirmer le Rendez-vous</h1>
                     <div className='appointment-inner-container'>
-
-                        
-                    
-                    
-                    <div >
-                        <h3>Appointment will be set for:</h3><br/>
-                        {/* <p>Date:  <span></span></p>
-                        <p>Day: <span></span></p>
-                        <p>Time: <span></span></p>
-                        <p>Service(s): <span></span></p>
-                        <p>Price: <span></span></p>
-                        <p>Average time: <span></span></p>
-                        <p>Phone number: <span></span></p> */}
-                        <center><table>
-                            <tr>
-                                <td>Date:</td>
-                                <th align='left'>{appointmentData.date}</th>
-                            </tr>
-                            <tr>
-                                <td>Day:</td>
-                                <th align='left'>{appointmentData.day}</th>
-                            </tr>
-                            <tr>
-                                <td>Time:</td>
-                                <th align='left'>{appointmentData.time}</th>
-                            </tr>
-                            <tr>
-                                <td>Service(s):</td>
-                                <th align='left'>{appointmentData.service}</th>
-                            </tr>
-                            <tr>
-                                <td>Price:</td>
-                                <th align='left'>{appointmentData.price} DT</th>
-                            </tr>
-                            <tr>
-                                <td>Average duration:</td>
-                                <th align='left'>{appointmentData.avgTime} min</th>
-                            </tr>
-                            <tr>
-                                <td>Phone number:</td>
-                                <th align='left'>{appointmentData.phone}</th>
-                            </tr>
-                        </table></center>
+                        <h2>Rendez-vous sera fixé pour:</h2>
+                        <div className='appointment-details'>
+                            <div className='appointment-detail'>
+                                <span>Date:</span>
+                                <span>{appointmentData.date}</span>
+                            </div>
+                            <div className='appointment-detail'>
+                                <span>Heure:</span>
+                                <span>{appointmentData.time}</span>
+                            </div>
+                            <div className='appointment-detail'>
+                                <span>Service(s):</span>
+                                <span>{appointmentData.service}</span>
+                            </div>
+                            <div className='appointment-detail'>
+                                <span>Prix:</span>
+                                <span>{appointmentData.price} DT</span>
+                            </div>
+                            <div className='appointment-detail'>
+                                <span>Durée estimée:</span>
+                                <span>{appointmentData.avgTime} min</span>
+                            </div>
+                            <div className='appointment-detail'>
+                                <span>Mobile:</span>
+                                <span>{appointmentData.phone}</span>
+                            </div>
+                        </div>
                     </div>
                     <div id='make-btn' className='appointment-inner-container'>
-                        <button className='appointment-btn' onClick={() => history.goBack()}>Back</button>
-                        <button onClick={makeAppointment} className='appointment-btn-next'>Confirm</button>
+                        <button className='appointment-btn' onClick={() => history.goBack()}>Retourner</button>
+                        <button onClick={makeAppointment} className='appointment-btn-next'>Confirmer</button>
                     </div>
                 </div>
-            </div> 
+            </div>
         </div>
-    </div>
-    )
+    );
 }
 
-export default Confirm
+export default Confirm;

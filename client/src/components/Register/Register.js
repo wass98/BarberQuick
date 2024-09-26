@@ -4,6 +4,7 @@ import logo from '../../assets/logo.png'
 import { Link } from 'react-router-dom'
 import axios from 'axios';
 import ErrorMsg from '../ErrorMsg/ErrorMsg'
+import { checkCookie } from '../../cookies';
 import loadingIcon from '../../assets/loading_icon.gif'
 import Navbar from '../Home/Navbar/Navbar'
 
@@ -14,6 +15,8 @@ const Register = (props) => {
     const [pass, setPass] = useState('')
     const [confirmPass, setConfirmPass] = useState('')
     const [error, setError] = useState('')
+
+    if (checkCookie('status')) props.history.push({ pathname: '/' });
 
     useEffect( ()=>{
         console.log('register rendered')
@@ -57,7 +60,7 @@ const Register = (props) => {
             <div className='register-container'>
                 <div className='register-form'>
                     <div className='register-info'>
-                        <h1>Register</h1>
+                        <h1>Registre</h1>
                         <img src={logo} alt=''></img>
                     </div>
                     <div className='form-container'> 
@@ -71,14 +74,14 @@ const Register = (props) => {
                             name='email'    
                             onChange={(e) => setEmail(e.target.value)}
                         />
-                        <p>Password:</p>
+                        <p>Mot de passe:</p>
                         <input type="password"
                             placeholder='Password...'
                             className='form-container-input'
                             name='password'
                             onChange={(e) => setPass(e.target.value)}
                         />
-                        <p>Confirm Password:</p>
+                        <p>Confirm mot de passe:</p>
                         <input type="password"
                             placeholder='Password...'
                             className='form-container-input'
@@ -91,10 +94,10 @@ const Register = (props) => {
                         </div>
                         <div className='new-account-login'>
                             <Link to='/login' className='new-account-link'>
-                                Have account? Login Now!
+                            Vous avez un compte ? Connectez-vous maintenant !
                             </Link> <br /><br />
                             <Link to='/registerb' className='new-account-link'>
-                                I AM A BARBER
+                                Je suis un Coiffeur
                             </Link>
                         </div> 
                         <div className='login-div'>

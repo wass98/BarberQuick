@@ -9,33 +9,18 @@ const SideNav = () => {
     // const [day, setDay] = useState('sun')
     // const [workTime, setWorkTime] = useState('')
     const [name, setName] = useState('')
+    const [isBarber, setIsBarber] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 
     useEffect(()=>{
         let loginAndReg = document.querySelector('.side-log-reg')
         let helloUser = document.querySelector('.side-logout')
-        let controlPanel = document.querySelector('.side-cp')
-        let userProfile = document.querySelector('.side-up')
-        let barberProfile = document.querySelector('.side-bp')
+        
+        setName(getCookie('name'))
+        setIsBarber(getCookie('barber') === 'true');
+        setIsLoggedIn(checkCookie('status'));
 
-        // let {day} = time()
-        // console.log(day)
-        // dayOfWeek(day)
-        if(getCookie('name'))
-            setName(getCookie('name'))
-
-        if(getCookie('barber') === 'true'){
-            controlPanel.style.display = 'block'
-            barberProfile.style.display = 'block'
-            userProfile.style.display = 'none'
-
-        }
-        else{
-            controlPanel.style.display = 'none'
-            barberProfile.style.display = 'none'
-            userProfile.style.display = 'block'
-
-        }
         if(checkCookie('status')){
             console.log('user logged')
             helloUser.style.display = 'flex'
@@ -44,8 +29,6 @@ const SideNav = () => {
             console.log('user not logged')
             helloUser.style.display = 'none'
             loginAndReg.style.display = 'flex'
-            userProfile.style.display = 'none'
-
         }
     },[])
 
@@ -65,18 +48,8 @@ const SideNav = () => {
     // }
 
     return (
-        <div className='side-navbar'>
-            <h1 className=''>Hello, {name} !</h1>
-            {/* <div className='side-navbar-info'>
-                <div className='side-nav-info'>
-                    <i className="fa fa-phone" aria-hidden="true"></i>
-                    <label> (972) 546643231 </label>
-                </div>
-                <div className='side-nav-info'>
-                    <i className="fa fa-calendar" aria-hidden="true"></i>
-                    <label> {day} - {workTime} </label>
-                </div>
-            </div> */}
+        <div className='side-navbar'><center>
+            <h1 className=''>Hello, {name} </h1>
             <ul className='side-navbar-ul'>
                     <li className=''>
                         <i className="fa fa-home" aria-hidden="true"></i>
@@ -90,21 +63,40 @@ const SideNav = () => {
                         <i className="fa fa-money" aria-hidden="true"></i>
                         <a href="./#hours-navigate" className='links'> Hours</a>
                     </li> */}
-                    <li id='control-panel' className='nav-items'>
-                        <Link className='links side-cp' to='/cpanel'>
-                            Control Panel
-                        </Link>
-                    </li>
-                    <li id='barber-profile' className='nav-items'>
-                        <Link className='links side-bp' to='/bprofile'>
-                            Profile
-                        </Link>
-                    </li>
-                    <li id='user-profile' className='nav-items'>
-                        <Link className='links side-up' to='/profile'>
-                            Profile
-                        </Link>
-                    </li>
+                    {
+                        isLoggedIn && (
+                            (isBarber ? (
+                                <li className='nav-items'>
+                                    <Link className='links' to='/cpanel'>
+                                        Control Panel
+                                    </Link>
+                                </li>
+                            ) : (
+                                <li className='nav-items'>
+                                    <Link className='links' to='/barberlist'>
+                                        Barbers List
+                                    </Link>
+                                </li>
+                            ))
+                        )
+                    }
+                    {
+                        isLoggedIn && (
+                            (isBarber ? (
+                                <li className='nav-items'>
+                                    <Link className='links' to='/bprofile'>
+                                        Profile
+                                    </Link>
+                                </li>
+                            ) : (
+                                <li className='nav-items'>
+                                    <Link className='links' to='/profile'>
+                                        Profile
+                                    </Link>
+                                </li>
+                            ))
+                        )
+                    }
                 </ul>
                 <div className='side-logout'>       
                     <button className='side-btn' onClick={logout}>Logout</button>
@@ -119,7 +111,7 @@ const SideNav = () => {
                     <Link className='side-log-reg-link' to='/register'>
                         Register
                     </Link>
-                </div>
+                </div></center>
         </div>
     )
 }
